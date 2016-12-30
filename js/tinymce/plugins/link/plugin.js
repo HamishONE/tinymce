@@ -522,6 +522,14 @@ tinymce.PluginManager.add('link', function(editor) {
 					return;
 				}
 
+				if (editor.settings.link_assume_add_http === true) {
+					if (!/^\w+:/i.test(href)) {
+						href = 'http://' + href;
+					}
+					insertLink();
+					return;
+				}
+
 				// Is not protocol prefixed
 				if ((editor.settings.link_assume_external_targets && !/^\w+:/i.test(href)) ||
 					(!editor.settings.link_assume_external_targets && /^\s*www[\.|\d\.]/i.test(href))) {
