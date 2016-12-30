@@ -140,6 +140,10 @@ tinymce.PluginManager.add('image', function(editor) {
 						});
 					}
 
+					if (editor.settings.image_max_width) {
+						dom.setAttribs(imgElm, {width: editor.settings.image_max_width});
+					}
+
 					selectImage();
 				};
 
