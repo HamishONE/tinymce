@@ -99,11 +99,32 @@
 		deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
 	});
 
+	test('Whitespace preserved in PRE', function() {
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<PRE>  </PRE>');
+		equal(serializer.serialize(root), '<pre>  </pre>', 'Whitespace around and inside PRE');
+		deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
+	});
+
 	test('Whitespace preserved in SPAN inside PRE', function() {
 		parser = new tinymce.html.DomParser({}, schema);
 		root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
 		equal(serializer.serialize(root), '<pre>  \t\r\n  <span>    test    </span> \t\r\n   </pre>', 'Whitespace around and inside PRE');
 		deepEqual(countNodes(root), {body:1, pre:1, span:1, '#text':3}, 'Whitespace around and inside PRE (count)');
+	});
+
+	test('Whitespace preserved in code', function() {
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<code>  a  </code>');
+		equal(serializer.serialize(root), '<code>  a  </code>', 'Whitespace inside code');
+		deepEqual(countNodes(root), {body:1, code:1, '#text':1}, 'Whitespace inside code (count)');
+	});
+
+	test('Whitespace preserved in code', function() {
+		parser = new tinymce.html.DomParser({}, schema);
+		root = parser.parse('<code>  </code>');
+		equal(serializer.serialize(root), '<code>  </code>', 'Whitespace inside code');
+		deepEqual(countNodes(root), {body:1, code:1, '#text':1}, 'Whitespace inside code (count)');
 	});
 
 	test('Parse invalid contents', function() {
@@ -508,6 +529,14 @@
 		parser = new tinymce.html.DomParser({}, schema);
 		root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
 		equal(serializer.serialize(root), '');
+	});
+
+	test('Padd empty with br', function() {
+		var schema = new tinymce.html.Schema();
+		var parser = new tinymce.html.DomParser({padd_empty_with_br: true}, schema);
+		var serializer = new tinymce.html.Serializer({padd_empty_with_br: true}, schema);
+		var root = parser.parse('<p>a</p><p></p>');
+		equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
 	});
 
 	test('Preserve space in inline span', function() {
